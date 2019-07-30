@@ -8,7 +8,6 @@
 package frc.robot.Commands.RobotArm.PID.PID_Group;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.Commands.GamePieceCollecting.ClawOpen;
 import frc.robot.Commands.RobotArm.PID.ArmReturn;
 import frc.robot.Commands.RobotArm.PID.JointSetLowestBallCollectingState;
 
@@ -20,7 +19,7 @@ public class SetBallGrabbingPreState extends CommandGroup {
 
     addParallel(new JointSetLowestBallCollectingState());
     addParallel(new ArmReturn());
-    addParallel(new ClawOpen());
+    //addParallel(new ClawOpen());
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

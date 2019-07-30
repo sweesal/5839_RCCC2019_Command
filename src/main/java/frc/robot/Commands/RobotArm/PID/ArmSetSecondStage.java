@@ -27,10 +27,10 @@ public class ArmSetSecondStage extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    armPID_SetSecondStage.setSetpoint(105000);
-    armPID_SetSecondStage.getPIDController().setPID(0.00001, 0.00000005, 0);
+    armPID_SetSecondStage.setSetpoint(85000);
+    armPID_SetSecondStage.getPIDController().setPID(0.0000085, 0.00000005, 0);
     armPID_SetSecondStage.setAbsoluteTolerance(500);
-    armPID_SetSecondStage.setOutputRange(-0.4, 0.4);
+    armPID_SetSecondStage.setOutputRange(-0.45, 0.45);
     armPID_SetSecondStage.disable();
 
   }

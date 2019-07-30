@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 
@@ -11,6 +12,8 @@ public class Collector extends Subsystem {
 
   private WPI_TalonSRX collectMotor = RobotMap.collecterMotor;
   private Solenoid collectorCylinders = RobotMap.collectorCylinder;
+
+  public boolean collectorFlag = false;
 
   public Collector(){
 
@@ -28,13 +31,19 @@ public class Collector extends Subsystem {
 
   }
 
+  public boolean GetClawFlag(){
+    if(Robot.oi.logitech_F310.getRawButtonPressed(8)) {
+        collectorFlag = collectorFlag ? false : true;
+    }
+    return collectorFlag;
+  }
 
     public void collectorIntakeBall(){
-      collectMotor.set(0.6);
+      collectMotor.set(0.4);
     }
 
     public void collectorOuttakeBall(){
-      collectMotor.set(-0.6);
+      collectMotor.set(-0.4);
     }
 
     public void collectorStopBallMotor(){

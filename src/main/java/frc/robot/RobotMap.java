@@ -4,6 +4,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -42,16 +46,16 @@ public class RobotMap {
 
     public static void init(){
 
-        leftFrontMotor = new CANSparkMax(1, MotorType.kBrushless);
+        leftFrontMotor = new CANSparkMax(1, MotorType.kBrushless);//invert
         leftMiddleMotor = new CANSparkMax(2, MotorType.kBrushless);//invert
         leftRearMotor = new CANSparkMax(3, MotorType.kBrushless);//invert
-        rightFrontMotor = new CANSparkMax(4, MotorType.kBrushed);
+        rightFrontMotor = new CANSparkMax(4, MotorType.kBrushless);
         rightMiddleMotor = new CANSparkMax(5, MotorType.kBrushless);
         rightRearMotor = new CANSparkMax(6, MotorType.kBrushless);
 
-        leftFrontMotor.setInverted(true);
-        leftMiddleMotor.setInverted(true);
-        leftRearMotor.setInverted(true);
+        // leftFrontMotor.setInverted(true);
+        // leftMiddleMotor.setInverted(true);
+        // leftRearMotor.setInverted(true);
 
         clawMotor = new CANSparkMax(7, MotorType.kBrushless);
 
@@ -63,7 +67,7 @@ public class RobotMap {
         collecterMotor = new WPI_TalonSRX(10);
 
         LED = new DigitalOutput(0);
-        LED.set(true);
+        //LED.set(false);
         //LED.enablePWM(0);
         
         limitSwitchArm = new DigitalInput(3);
@@ -76,7 +80,9 @@ public class RobotMap {
 
         pdp = new PowerDistributionPanel(0);
 
-        ConfigSmartDashBooardDisplay();
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+        camera.setConnectionStrategy(ConnectionStrategy.kAutoManage);
+        camera.setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
 
     }
 

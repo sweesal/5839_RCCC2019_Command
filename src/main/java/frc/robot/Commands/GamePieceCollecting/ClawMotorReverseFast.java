@@ -5,54 +5,46 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands.RobotArm.PID;
+package frc.robot.Commands.GamePieceCollecting;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Subsystem.PIDsubsystems.JointPID;
+import frc.robot.Robot;
 
-public class JointSetLowestBallCollectingState extends Command {
-
-  private JointPID jointPID_SetLowestBallCollectingState = new JointPID();
-
-  public JointSetLowestBallCollectingState() {
-    super("Joint_SetLowestBallCollectingState");
-    requires(jointPID_SetLowestBallCollectingState);
+public class ClawMotorReverseFast extends Command {
+  public ClawMotorReverseFast() {
+    requires(Robot.claw);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
 
-
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    jointPID_SetLowestBallCollectingState.setSetpoint(-18000);
-    jointPID_SetLowestBallCollectingState.getPIDController().setPID(0.00003, 0, 0);
-    jointPID_SetLowestBallCollectingState.setAbsoluteTolerance(500);
-    jointPID_SetLowestBallCollectingState.setOutputRange(-0.3, 0.35);
-    jointPID_SetLowestBallCollectingState.disable();
+    Robot.claw.clawMotorStop();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    jointPID_SetLowestBallCollectingState.enable();
+    Robot.claw.clawMotorReverseFast();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return jointPID_SetLowestBallCollectingState.onTarget();
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    jointPID_SetLowestBallCollectingState.disable();
-    jointPID_SetLowestBallCollectingState.jointMotor.set(0);
+    Robot.claw.clawMotorStop();
   }
 
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end();
+    Robot.claw.clawMotorStop();
   }
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.*;
 
 
 public class Arm extends Subsystem {
@@ -40,6 +41,9 @@ public class Arm extends Subsystem {
   @Override
   public void periodic() {
 
+    // armMotorFreeAjust();
+    // jointMotorFreeAdjust();
+
     SmartDashboard.putNumber("arm", armMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("joint", jointMotor.getSelectedSensorPosition());
 
@@ -48,17 +52,23 @@ public class Arm extends Subsystem {
     
 
       if(jointMotor.getSensorCollection().isFwdLimitSwitchClosed()){
-        LED.set(false);
+     
         jointMotor.setSelectedSensorPosition(0);
         
       }else{
-        LED.set(true);
+
       }
 
       if(armMotor.getSensorCollection().isFwdLimitSwitchClosed()){
-        LED.set(false);
+
         armMotor.setSelectedSensorPosition(0);
         
+      }else{
+
+      }
+
+      if(Robot.oi.cycFarRight.get()){
+        LED.set(false);
       }else{
         LED.set(true);
       }
@@ -101,6 +111,24 @@ public class Arm extends Subsystem {
 
   }
 
+  public void armMotorFreeAjust(){
+    double ratio = 0.35;
+    double inputPower = Robot.oi.logitech_F310.getRawAxis(1)*ratio;
+    boolean boolA = armMotor.getSelectedSensorPosition() < 111111;
+    boolean boolB = armMotor.getSensorCollection().isFwdLimitSwitchClosed();
+
+    if(boolA== false && boolB == false){
+      armMotor.set(inputPower);
+    }else if(boolA == true && boolB == false){
+      armMotor.set(-Math.abs(inputPower));
+    }else if(boolA && boolB){
+      armMotor.set(Math.abs(inputPower));
+    }else{
+      armMotorStop();
+    }
+
+  }
+
   public void jointMotorRunClock(){
 
     if(jointMotor.getSelectedSensorPosition() > -80000){
@@ -121,6 +149,24 @@ public class Arm extends Subsystem {
     }else{
       jointMotor.set(0.3);
     }
+  }
+
+  public void jointMotorFreeAdjust(){
+    double ratio = 0.4;
+    double inputPower = -Robot.oi.logitech_F310.getRawAxis(5)*ratio;
+    boolean boolA = jointMotor.getSelectedSensorPosition() > -80000;
+    boolean boolB = jointMotor.getSensorCollection().isFwdLimitSwitchClosed();
+
+    if(boolA==true && boolB == false){
+      jointMotor.set(inputPower);
+    }else if(boolA == false && boolB == false){
+      jointMotor.set(Math.abs(inputPower));
+    }else if(boolA == true && boolB == true){
+      jointMotor.set(-Math.abs(inputPower));
+    }else{
+      joingMotorStop();
+    }
+
   }
 
   public boolean getJointLimitSwitch(){

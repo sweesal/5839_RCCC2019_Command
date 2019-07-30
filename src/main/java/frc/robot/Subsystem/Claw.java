@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.Commands.GamePieceCollecting.ClawClose;
 
 
 public class Claw extends Subsystem {
@@ -53,11 +52,23 @@ public class Claw extends Subsystem {
     if(isPanelGot()){
       clawMotorStop();
     }else{
-      clawMotor.set(-0.5);
+      clawMotor.set(-0.6);
+    }
+  }
+
+  public void clawMotorReverseFast(){
+    if(isPanelGot()){
+      clawMotorStop();
+    }else{
+      clawMotor.set(-0.9);
     }
   }
 
   public void clawMotorRun(){
+    clawMotor.set(0.9);
+  }
+
+  public void clawMotorRunFast(){
     clawMotor.set(0.8);
   }
 

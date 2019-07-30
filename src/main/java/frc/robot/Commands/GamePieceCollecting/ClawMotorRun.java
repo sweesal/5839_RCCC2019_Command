@@ -26,7 +26,7 @@ public class ClawMotorRun extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    
+    Robot.claw.clawBack();
     Robot.claw.clawMotorRun();
   }
 
@@ -39,7 +39,6 @@ public class ClawMotorRun extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    
     Robot.claw.clawMotorStop();
   }
 

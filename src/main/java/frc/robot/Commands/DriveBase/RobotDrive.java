@@ -25,8 +25,11 @@ public class RobotDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-  //  Robot.driveBase.arcadeDrive_PercentOutput_Original(Robot.oi.logitech_F310.getRawAxis(1), Robot.oi.logitech_F310.getRawAxis(4));
-  //    Robot.driveBase.tankDrive_PercentOutput_Original(-Robot.oi.logitech_F310.getRawAxis(1), -Robot.oi.logitech_F310.getRawAxis(5));
+  //      Robot.driveBase.arcadeDrive_PercentOutput_Original(Robot.oi.logitech_F310.getRawAxis(1), -Robot.oi.logitech_F310.getRawAxis(4));
+    //     Robot.driveBase.tankDrive_Velocity(Robot.oi.logitech_F310.getRawAxis(1), Robot.oi.logitech_F310.getRawAxis(5));
+          Robot.driveBase.tankDrive_Velocity(-Robot.oi.cycController.getRawAxis(4), -Robot.oi.cycController.getRawAxis(1)); 
+   //       Robot.driveBase.tankDrive_PercentOutput_Original(-Robot.oi.cycController.getRawAxis(4)*0.65, -Robot.oi.cycController.getRawAxis(1)*0.65);
+   //       Robot.driveBase.tankDrive_PercentOutput_Original(Robot.oi.logitech_F310.getRawAxis(1)*0.99, Robot.oi.logitech_F310.getRawAxis(5)*0.99);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -38,7 +41,8 @@ public class RobotDrive extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.driveBase.Stop_PercentOutput();
+  //  Robot.driveBase.Stop_PercentOutput();
+   Robot.driveBase.tankDrive_Velocity(0, 0);
   }
 
   // Called when another command which requires one or more of the same

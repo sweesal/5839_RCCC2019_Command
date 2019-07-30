@@ -40,7 +40,7 @@ public class ClawMotorReverse extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    
+    Robot.claw.clawOut();
     Robot.claw.clawMotorStop();
   }
 

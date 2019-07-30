@@ -5,26 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands.GamePieceCollecting.CommandGroup;
+package frc.robot.Commands.RobotArm.PID.PID_Group;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.Commands.GamePieceCollecting.ClawClose;
-//import frc.robot.Commands.GamePieceCollecting.ClawClose;
-import frc.robot.Commands.GamePieceCollecting.CollectorBack;
-import frc.robot.Commands.GamePieceCollecting.CollectorIntake;
-import frc.robot.Commands.RobotArm.PID.PID_Group.ReturnToZero;
-import frc.robot.Commands.RobotArm.PID.PID_Group.SetBallGrabbingPreState;
+import frc.robot.Commands.RobotArm.PID.ArmSetSecondStage;
+import frc.robot.Commands.RobotArm.PID.JointSetLowestBallCollectingState;
 
-public class GetTheBallReturnToNormalState extends CommandGroup {
-
-  
-  public GetTheBallReturnToNormalState() {
-    addSequential(new SetBallGrabbingPreState(), 1);
-    addParallel(new ClawClose());
-    addSequential(new CollectorBack(), 0.25);
-    addParallel(new ReturnToZero(), 3);
-    addParallel(new CollectorIntake(), 0.05);
-    addSequential(new ReturnToZero(), 0.05);
+public class SetSecondStageBall extends CommandGroup {
+  /**
+   * Add your docs here.
+   */
+  public SetSecondStageBall() {
+    addParallel(new ArmSetSecondStage());
+    addParallel(new JointSetLowestBallCollectingState());
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

@@ -25,10 +25,10 @@ public class ArmSetFlat extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    armPID_SetFlat.setSetpoint(55555);
-    armPID_SetFlat.getPIDController().setPID(0.000035, 0, 0);
+    armPID_SetFlat.setSetpoint(73000);
+    armPID_SetFlat.getPIDController().setPID(0.0000325, 0, 0);
     armPID_SetFlat.setAbsoluteTolerance(500);
-    armPID_SetFlat.setOutputRange(-0.4, 0.4);
+    armPID_SetFlat.setOutputRange(-0.425, 0.425);
     armPID_SetFlat.disable();
 
   }

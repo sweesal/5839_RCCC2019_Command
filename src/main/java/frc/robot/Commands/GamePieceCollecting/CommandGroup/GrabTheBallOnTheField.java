@@ -8,15 +8,13 @@
 package frc.robot.Commands.GamePieceCollecting.CommandGroup;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.RobotMap;
-import frc.robot.Commands.GamePieceCollecting.ClawMotorRun;
+import frc.robot.Commands.GamePieceCollecting.ClawMotorRunFast;
 import frc.robot.Commands.GamePieceCollecting.ClawOpen;
-import frc.robot.Commands.GamePieceCollecting.CollectorBack;
 import frc.robot.Commands.GamePieceCollecting.CollectorIntake;
 import frc.robot.Commands.GamePieceCollecting.CollectorOut;
 import frc.robot.Commands.RobotArm.PID.ArmReturn;
 import frc.robot.Commands.RobotArm.PID.JointSetBallCollecting;
-import frc.robot.Commands.RobotArm.PID.PID_Group.SetBallGrabbingPreState;
+
 
 public class GrabTheBallOnTheField extends CommandGroup {
   /**
@@ -24,11 +22,13 @@ public class GrabTheBallOnTheField extends CommandGroup {
    */
   public GrabTheBallOnTheField() {
 
-    addSequential(new CollectorOut(), 0.5);
+    addSequential(new ClawOpen(), 0.3);
+    addSequential(new CollectorOut(), 0.3);
     addParallel(new ArmReturn());
-    addParallel(new ClawMotorRun());
+    addParallel(new ClawMotorRunFast());
     addParallel(new JointSetBallCollecting());
     addParallel(new CollectorIntake());
+    
     // if(RobotMap.jointMotor.getSelectedSensorPosition() > -15000 || RobotMap.armMotor.getSelectedSensorPosition() > 35000){
     //   addSequential(new SetBallGrabbingPreState(), 1.25);
     //   addSequential(new CollectorOut(), 0.5);

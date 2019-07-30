@@ -26,7 +26,7 @@ public class JointSetFlat extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    joint_SetFlat.setSetpoint(-35000);
+    joint_SetFlat.setSetpoint(-37500);
     joint_SetFlat.getPIDController().setPID(0.0000285, 0.00000015, 0);
     joint_SetFlat.setAbsoluteTolerance(100);
     joint_SetFlat.setOutputRange(-0.35, 0.35);
