@@ -2,6 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.Autonomous.TestContainer;
 import frc.robot.Subsystem.Arm;
 import frc.robot.Subsystem.Claw;
 import frc.robot.Subsystem.Collector;
@@ -23,6 +25,8 @@ public class Robot extends TimedRobot {
   public static PanelTracking panelTracking;
   public static OI oi;
 
+  TestContainer container;
+
 
   @Override
   public void robotInit() {
@@ -38,6 +42,8 @@ public class Robot extends TimedRobot {
 
 
     oi = new OI();
+
+    container = new TestContainer();
 
   }
 
@@ -62,13 +68,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    container.reset();
+    container.getAutoCommand().schedule();
 
   }
 
 
   @Override
   public void autonomousPeriodic() {
-    Scheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
 
   }
 

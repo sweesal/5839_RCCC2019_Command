@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.lpms.LPMS;
 
 
 
@@ -43,6 +44,8 @@ public class RobotMap {
     public static Solenoid collectorCylinder;
 
     public static PowerDistributionPanel pdp;
+
+    public static LPMS imu;
 
     public static void init(){
 
@@ -79,6 +82,8 @@ public class RobotMap {
         collectorCylinder = new Solenoid(20, 2);
 
         pdp = new PowerDistributionPanel(0);
+
+        imu = new LPMS();
 
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setConnectionStrategy(ConnectionStrategy.kAutoManage);
