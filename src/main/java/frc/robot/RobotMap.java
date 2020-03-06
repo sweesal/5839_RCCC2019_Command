@@ -77,7 +77,7 @@ public class RobotMap {
         limitSwitchBallRight = new DigitalInput(2);
 
         clawCylinder = new Solenoid(20, 1);
-        //collectorCylinder = new Solenoid(20, 2);
+        collectorCylinder = new Solenoid(20, 2);
 
         pdp = new PowerDistributionPanel(0);
 

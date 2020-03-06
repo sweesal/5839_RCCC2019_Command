@@ -106,10 +106,10 @@ public class OI {
         GamePadRight = new JoystickButton(cycController, 3);
         GamePadLeft = new JoystickButton(cycController, 1);
 
-        greenButton.whileHeld(new RetrunPanelGrabbingState());
-        yellowButton.whileHeld(new SetBallGrabbingPreState());
-        leftFrontButton.whileHeld(new CollectorIntake());
-        rightFrontButton.whileHeld(new CollectorOuttake());
+        // greenButton.whileHeld(new RetrunPanelGrabbingState());
+        // yellowButton.whileHeld(new SetBallGrabbingPreState());
+        // leftFrontButton.whileHeld(new CollectorIntake());
+        // rightFrontButton.whileHeld(new CollectorOuttake());
 
         yellowButton.whileHeld(new ArmMotorRunAntiClock());
         greenButton.whileHeld(new ArmMotorRunClock());
