@@ -2,8 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.Autonomous.TestContainer;
 import frc.robot.Subsystem.Arm;
 import frc.robot.Subsystem.Claw;
 import frc.robot.Subsystem.Collector;
@@ -16,16 +14,16 @@ import frc.robot.Subsystem.PIDsubsystems.JointPID;
 
 public class Robot extends TimedRobot {
 
+  public static OI oi;
   public static Arm arm;
   public static Claw claw;
-  public static Collector collector;
-  public static DriveBase driveBase;
   public static ArmPID armPID;
   public static JointPID jointPID;
-  public static PanelTracking panelTracking;
-  public static OI oi;
+  public static Collector collector;
+  public static DriveBase driveBase;
+  public static PanelTracking  panelTracking;
+  // = new PanelTracking();
 
-  TestContainer container;
 
 
   @Override
@@ -38,18 +36,23 @@ public class Robot extends TimedRobot {
     driveBase = new DriveBase();
     armPID = new ArmPID();
     jointPID = new JointPID();
-    panelTracking = new PanelTracking();
-
+   
 
     oi = new OI();
-
-    container = new TestContainer();
 
   }
 
 
   @Override
   public void robotPeriodic() {
+
+    if(Robot.oi.cycFarRight.get()){
+      RobotMap.LED.set(false);
+      //panelTracking.DataAcquire();
+    }else{
+      RobotMap.LED.set(true);
+    }
+
   }
 
 
@@ -68,15 +71,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    container.reset();
-    container.getAutoCommand().schedule();
 
   }
 
 
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
+    Scheduler.getInstance().run();
 
   }
 

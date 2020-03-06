@@ -30,7 +30,7 @@ public class ArmSetSecondStage extends Command {
     armPID_SetSecondStage.setSetpoint(85000);
     armPID_SetSecondStage.getPIDController().setPID(0.0000085, 0.00000005, 0);
     armPID_SetSecondStage.setAbsoluteTolerance(500);
-    armPID_SetSecondStage.setOutputRange(-0.45, 0.45);
+    armPID_SetSecondStage.setOutputRange(-0.455, 0.455);
     armPID_SetSecondStage.disable();
 
   }

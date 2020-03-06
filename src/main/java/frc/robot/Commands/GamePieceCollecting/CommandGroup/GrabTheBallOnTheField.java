@@ -8,7 +8,7 @@
 package frc.robot.Commands.GamePieceCollecting.CommandGroup;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.Commands.GamePieceCollecting.ClawMotorRunFast;
+import frc.robot.Commands.GamePieceCollecting.ClawMotorRunPID;
 import frc.robot.Commands.GamePieceCollecting.ClawOpen;
 import frc.robot.Commands.GamePieceCollecting.CollectorIntake;
 import frc.robot.Commands.GamePieceCollecting.CollectorOut;
@@ -22,24 +22,27 @@ public class GrabTheBallOnTheField extends CommandGroup {
    */
   public GrabTheBallOnTheField() {
 
-    addSequential(new ClawOpen(), 0.3);
-    addSequential(new CollectorOut(), 0.3);
-    addParallel(new ArmReturn());
-    addParallel(new ClawMotorRunFast());
+    addSequential(new CollectorOut(), 0.2);
+    addSequential(new ClawOpen(), 0.1);
     addParallel(new JointSetBallCollecting());
+    addParallel(new ArmReturn());
+    //addParallel(new ClawMotorRunFast());
+    addParallel(new ClawMotorRunPID());
     addParallel(new CollectorIntake());
     
     // if(RobotMap.jointMotor.getSelectedSensorPosition() > -15000 || RobotMap.armMotor.getSelectedSensorPosition() > 35000){
-    //   addSequential(new SetBallGrabbingPreState(), 1.25);
-    //   addSequential(new CollectorOut(), 0.5);
-    //   addParallel(new ArmReturn(), 0.25);
-    //   addParallel(new ClawMotorRun());
+    //   addParallel(new ClawOpen());
+    //   addSequential(new SetBallGrabbingPreState(), 0.75);
+    //   addParallel(new CollectorOut(), 0.5);
+    //   addSequential(new ArmReturn(), 0.25);
+    //   addParallel(new ClawMotorRunFast());
     //   addParallel(new JointSetBallCollecting());
     //   addParallel(new CollectorIntake());
     // }else{
-    //   addSequential(new CollectorOut());
+    //   addParallel(new ClawOpen());
+    //   addParallel(new CollectorOut());
     //   addParallel(new ArmReturn(), 0.25);
-    //   addParallel(new ClawMotorRun());
+    //   addParallel(new ClawMotorRunFast());
     //   addParallel(new JointSetBallCollecting());
     //   addParallel(new CollectorIntake());
     // }

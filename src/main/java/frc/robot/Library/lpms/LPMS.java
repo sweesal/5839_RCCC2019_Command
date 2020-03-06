@@ -980,10 +980,6 @@ public class LPMS{
 	public float getTimestamp() {
 		return IMUProtocol.decodebyte2float(getTimestamp_all());
 	}
-
-	public void reset(){
-		
-	}
 	
 
 }

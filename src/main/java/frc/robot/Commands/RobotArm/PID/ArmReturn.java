@@ -26,8 +26,8 @@ public class ArmReturn extends Command {
   @Override
   protected void initialize() {
     armPID_SetZero.setSetpoint(0);
-    armPID_SetZero.getPIDController().setPID(0.000025, 0.00000005, 0);
-    armPID_SetZero.setOutputRange(-0.35, 0.35);
+    armPID_SetZero.getPIDController().setPID(0.00003, 0.00000005, 0.000025);
+    armPID_SetZero.setOutputRange(-0.475, 0.475);
     armPID_SetZero.disable();
 
   }

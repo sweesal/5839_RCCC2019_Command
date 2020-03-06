@@ -10,8 +10,8 @@ package frc.robot.Commands.GamePieceCollecting;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class ClawMotorReverse extends Command {
-  public ClawMotorReverse() {
+public class ClawReversePID extends Command {
+  public ClawReversePID() {
     requires(Robot.claw);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -20,30 +20,24 @@ public class ClawMotorReverse extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    
-    Robot.claw.clawMotorStop();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute(){
-    if(Robot.claw.GetGrabberFlag()){
-      
-    }
-    Robot.claw.clawMotorReverse();
+  protected void execute() {
+    Robot.claw.clawMotorReversePID();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.claw.isPanelGot();
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.claw.clawOut();
-    Robot.claw.clawMotorStop();
+    Robot.claw.clawMotorStopPID();
   }
 
   // Called when another command which requires one or more of the same

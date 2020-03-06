@@ -26,8 +26,8 @@ public class JointReturn extends Command {
   @Override
   protected void initialize() {
     joint_SetZero.setSetpoint(0);
-    joint_SetZero.getPIDController().setPID(0.0000525, 0, 0);
-    joint_SetZero.setOutputRange(-0.35, 0.35);
+    joint_SetZero.getPIDController().setPID(0.00006, 0, 0.000015);
+    joint_SetZero.setOutputRange(-0.6, 0.6);
     joint_SetZero.setAbsoluteTolerance(500);
     joint_SetZero.disable();
   }

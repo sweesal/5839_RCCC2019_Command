@@ -21,7 +21,7 @@ public class Collector extends Subsystem {
 
   @Override
   public void periodic() {
-
+    GetCollectorFlag();
   }
 
 
@@ -31,8 +31,8 @@ public class Collector extends Subsystem {
 
   }
 
-  public boolean GetClawFlag(){
-    if(Robot.oi.logitech_F310.getRawButtonPressed(8)) {
+  public boolean GetCollectorFlag(){
+    if(Robot.oi.logitech_F310.getRawButtonPressed(7)) {
         collectorFlag = collectorFlag ? false : true;
     }
     return collectorFlag;

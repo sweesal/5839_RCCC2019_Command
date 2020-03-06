@@ -22,6 +22,7 @@ public class Arm extends Subsystem {
   public DigitalOutput LED = RobotMap.LED; 
 
   public Arm(){
+
     armMotor.setSelectedSensorPosition(0);
     jointMotor.setSelectedSensorPosition(0);
 
@@ -67,11 +68,8 @@ public class Arm extends Subsystem {
 
       }
 
-      if(Robot.oi.cycFarRight.get()){
-        LED.set(false);
-      }else{
-        LED.set(true);
-      }
+
+
     }
 
     public void armMotorStop(){
@@ -92,8 +90,6 @@ public class Arm extends Subsystem {
       }else{
         armMotor.set(0.3);
       }
-      
-
     }
   }
   

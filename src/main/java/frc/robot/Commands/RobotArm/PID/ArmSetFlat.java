@@ -26,9 +26,9 @@ public class ArmSetFlat extends Command {
   @Override
   protected void initialize() {
     armPID_SetFlat.setSetpoint(73000);
-    armPID_SetFlat.getPIDController().setPID(0.0000325, 0, 0);
+    armPID_SetFlat.getPIDController().setPID(0.0000335, 0, 0);
     armPID_SetFlat.setAbsoluteTolerance(500);
-    armPID_SetFlat.setOutputRange(-0.425, 0.425);
+    armPID_SetFlat.setOutputRange(-0.475, 0.475);
     armPID_SetFlat.disable();
 
   }

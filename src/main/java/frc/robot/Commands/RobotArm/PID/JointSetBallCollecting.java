@@ -24,10 +24,10 @@ public class JointSetBallCollecting extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    jointPID_SetCollectBall.setSetpoint(-67500);
-    jointPID_SetCollectBall.getPIDController().setPID(0.00003, 0, 0);
+    jointPID_SetCollectBall.setSetpoint(-71000);
+    jointPID_SetCollectBall.getPIDController().setPID(0.00005, 0, 0.0000515);
     jointPID_SetCollectBall.setAbsoluteTolerance(500);
-    jointPID_SetCollectBall.setOutputRange(-0.45, 0.45 );
+    jointPID_SetCollectBall.setOutputRange(-0.58, 0.58);
     jointPID_SetCollectBall.disable();
   }
 

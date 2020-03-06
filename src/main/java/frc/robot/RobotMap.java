@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Library.lpms.LPMS;
 
 
 
@@ -45,13 +44,12 @@ public class RobotMap {
 
     public static PowerDistributionPanel pdp;
 
-    public static LPMS imu;
-
     public static void init(){
 
         leftFrontMotor = new CANSparkMax(1, MotorType.kBrushless);//invert
         leftMiddleMotor = new CANSparkMax(2, MotorType.kBrushless);//invert
         leftRearMotor = new CANSparkMax(3, MotorType.kBrushless);//invert
+    //    leftRearMotor.setInverted(true);
         rightFrontMotor = new CANSparkMax(4, MotorType.kBrushless);
         rightMiddleMotor = new CANSparkMax(5, MotorType.kBrushless);
         rightRearMotor = new CANSparkMax(6, MotorType.kBrushless);
@@ -66,11 +64,11 @@ public class RobotMap {
         jointMotor = new WPI_TalonSRX(9);
         jointMotor.setInverted(true);
         SmartDashboard.putData("arm8", armMotor);
-        SmartDashboard.putData("joint9", jointMotor);
+        SmartDashboard.putNumber("joint9", jointMotor.getSelectedSensorPosition());
         collecterMotor = new WPI_TalonSRX(10);
 
         LED = new DigitalOutput(0);
-        //LED.set(false);
+       // LED.set(false);
         //LED.enablePWM(0);
         
         limitSwitchArm = new DigitalInput(3);
@@ -79,11 +77,9 @@ public class RobotMap {
         limitSwitchBallRight = new DigitalInput(2);
 
         clawCylinder = new Solenoid(20, 1);
-        collectorCylinder = new Solenoid(20, 2);
+        //collectorCylinder = new Solenoid(20, 2);
 
         pdp = new PowerDistributionPanel(0);
-
-        imu = new LPMS();
 
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setConnectionStrategy(ConnectionStrategy.kAutoManage);

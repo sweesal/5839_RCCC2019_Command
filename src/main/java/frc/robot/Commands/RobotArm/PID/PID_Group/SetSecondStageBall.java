@@ -8,16 +8,20 @@
 package frc.robot.Commands.RobotArm.PID.PID_Group;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.Commands.RobotArm.PID.ArmSetSecondStage;
-import frc.robot.Commands.RobotArm.PID.JointSetLowestBallCollectingState;
+
+import frc.robot.Commands.RobotArm.PID.ArmSetVertial;
+import frc.robot.Commands.RobotArm.PID.JointSetFlat;
+
 
 public class SetSecondStageBall extends CommandGroup {
   /**
    * Add your docs here.
    */
   public SetSecondStageBall() {
-    addParallel(new ArmSetSecondStage());
-    addParallel(new JointSetLowestBallCollectingState());
+    // addParallel(new ArmSetSecondStage());
+    // addParallel(new JointSetLowestBallCollectingState());
+    addParallel(new ArmSetVertial());
+    addParallel(new JointSetFlat());
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

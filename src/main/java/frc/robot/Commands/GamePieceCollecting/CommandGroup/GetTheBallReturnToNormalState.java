@@ -13,18 +13,17 @@ import frc.robot.Commands.GamePieceCollecting.ClawClose;
 import frc.robot.Commands.GamePieceCollecting.CollectorBack;
 import frc.robot.Commands.GamePieceCollecting.CollectorIntake;
 import frc.robot.Commands.RobotArm.PID.PID_Group.ReturnToZero;
-import frc.robot.Commands.RobotArm.PID.PID_Group.SetBallGrabbingPreState;
 
 public class GetTheBallReturnToNormalState extends CommandGroup {
 
   
   public GetTheBallReturnToNormalState() {
-    addSequential(new SetBallGrabbingPreState(), 1);
     addParallel(new ClawClose());
-    addSequential(new CollectorBack(), 0.25);
-    addParallel(new ReturnToZero(), 3);
+  //addParallel(new SetBallGrabbingPreState(), 0.5);
+    addSequential(new ReturnToZero(), 0.75);
     addParallel(new CollectorIntake(), 0.05);
-    addSequential(new ReturnToZero(), 0.05);
+    addSequential(new CollectorBack(), 0.25);
+    
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

@@ -25,10 +25,10 @@ public class JointSetLowestBallCollectingState extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    jointPID_SetLowestBallCollectingState.setSetpoint(-18000);
-    jointPID_SetLowestBallCollectingState.getPIDController().setPID(0.00003, 0, 0);
+    jointPID_SetLowestBallCollectingState.setSetpoint(-17500);
+    jointPID_SetLowestBallCollectingState.getPIDController().setPID(0.00004, 0, 0.00001);
     jointPID_SetLowestBallCollectingState.setAbsoluteTolerance(500);
-    jointPID_SetLowestBallCollectingState.setOutputRange(-0.3, 0.35);
+    jointPID_SetLowestBallCollectingState.setOutputRange(-0.6, 0.6);
     jointPID_SetLowestBallCollectingState.disable();
   }
 

@@ -5,23 +5,31 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Commands.DriveBase.RobotForward;
 import frc.robot.Commands.GamePieceCollecting.ClawClose;
 import frc.robot.Commands.GamePieceCollecting.ClawMotorReverse;
 import frc.robot.Commands.GamePieceCollecting.ClawMotorReverseFast;
-import frc.robot.Commands.GamePieceCollecting.ClawMotorRun;
+import frc.robot.Commands.GamePieceCollecting.ClawMotorRunFast;
+import frc.robot.Commands.GamePieceCollecting.ClawMotorRunPID;
 import frc.robot.Commands.GamePieceCollecting.ClawOpen;
 import frc.robot.Commands.GamePieceCollecting.ClawOperating;
+import frc.robot.Commands.GamePieceCollecting.ClawReversePID;
 import frc.robot.Commands.GamePieceCollecting.CollectorBack;
 import frc.robot.Commands.GamePieceCollecting.CollectorIntake;
+import frc.robot.Commands.GamePieceCollecting.CollectorOperating;
 import frc.robot.Commands.GamePieceCollecting.CollectorOut;
 import frc.robot.Commands.GamePieceCollecting.CollectorOuttake;
-import frc.robot.Commands.GamePieceCollecting.CommandGroup.CollectorOperating;
 import frc.robot.Commands.GamePieceCollecting.CommandGroup.GetTheBallReturnToNormalState;
 import frc.robot.Commands.GamePieceCollecting.CommandGroup.GrabTheBallOnTheField;
 import frc.robot.Commands.RobotArm.ArmMotorRunAntiClock;
 import frc.robot.Commands.RobotArm.ArmMotorRunClock;
 import frc.robot.Commands.RobotArm.JointMotorRunAntiClock;
 import frc.robot.Commands.RobotArm.JointMotorRunClock;
+import frc.robot.Commands.RobotArm.PID.ArmReturn;
+import frc.robot.Commands.RobotArm.PID.ArmSetVertial;
+import frc.robot.Commands.RobotArm.PID.JointReturn;
+import frc.robot.Commands.RobotArm.PID.JointSetBallCollecting;
+import frc.robot.Commands.RobotArm.PID.JointSetLowestBallCollectingState;
 // import frc.robot.Commands.GamePieceCollecting.CommandGroup.CollectBall;
 // import frc.robot.Commands.GamePieceCollecting.CommandGroup.GetPanel;
 // import frc.robot.Commands.RobotArm.PID.ArmReturn;
@@ -65,6 +73,7 @@ public class OI {
     public JoystickButton cycFarRight;     
     
     public JoystickButton GamePadLeft;
+    public JoystickButton GamePadRight;
 
 
     public OI(){
@@ -94,8 +103,13 @@ public class OI {
         cycRight = new JoystickButton(GamePad, 8);
         cycFarRight = new JoystickButton(GamePad, 9);
 
-
+        GamePadRight = new JoystickButton(cycController, 3);
         GamePadLeft = new JoystickButton(cycController, 1);
+
+        greenButton.whileHeld(new RetrunPanelGrabbingState());
+        yellowButton.whileHeld(new SetBallGrabbingPreState());
+        leftFrontButton.whileHeld(new CollectorIntake());
+        rightFrontButton.whileHeld(new CollectorOuttake());
 
         yellowButton.whileHeld(new ArmMotorRunAntiClock());
         greenButton.whileHeld(new ArmMotorRunClock());
@@ -115,9 +129,15 @@ public class OI {
         // axisLeftButton.whileHeld(new ArmSetFlat());
         // axisRightButton.whileHeld(new JointSetFlat());
 
-        axisLeftButton.whileHeld(new ClawMotorRun());
-        axisRightButton.whenPressed(new ClawMotorReverse());
-        GamePadLeft.whileHeld(new ClawMotorRun());
+        // axisLeftButton.whileHeld(new ClawMotorRun());
+        // axisRightButton.whileHeld(new ClawMotorReverseFast());
+        axisLeftButton.whileHeld(new ClawMotorRunPID());
+        axisRightButton.whileHeld(new ClawReversePID());
+
+    //    GamePadLeft.whileHeld(new DriveForward());
+    //    GamePadLeft.whileHeld(new ClawMotorRunPID());
+    //    GamePadLeft.whileHeld(new ClawMotorRun());
+    //    GamePadRight.whileHeld(new RobotForward());
 
         cycButtonlowest.whileHeld(new ReturnToZero());
         cycButtonLow.whileHeld(new ReturnToZero());
@@ -129,25 +149,29 @@ public class OI {
         cycRight.whileHeld(new SetSecondStagePanel());
 
 
-        SmartDashboard.putData(new ArmMotorRunClock());
-        SmartDashboard.putData(new ArmMotorRunAntiClock());
-        SmartDashboard.putData(new JointMotorRunClock());
-        SmartDashboard.putData(new JointMotorRunAntiClock());
+    //     SmartDashboard.putData(new ArmMotorRunClock());
+    //     SmartDashboard.putData(new ArmMotorRunAntiClock());
+    //     SmartDashboard.putData(new JointMotorRunClock());
+    //     SmartDashboard.putData(new JointMotorRunAntiClock());
 
-        SmartDashboard.putData(new ClawMotorRun());
-        SmartDashboard.putData(new ClawMotorReverse());
+    //     SmartDashboard.putData(new ClawMotorRunFast());
+    //     SmartDashboard.putData(new ClawMotorReverse());
 
-        SmartDashboard.putData(new ClawOpen());
-        SmartDashboard.putData(new ClawClose());
+    //     SmartDashboard.putData(new ClawOpen());
+    //     SmartDashboard.putData(new ClawClose());
 
-        SmartDashboard.putData(new CollectorIntake());
-        SmartDashboard.putData(new CollectorOuttake());
+    //     SmartDashboard.putData(new CollectorIntake());
+    //     SmartDashboard.putData(new CollectorOuttake());
 
-        SmartDashboard.putData(new CollectorOut());
-        SmartDashboard.putData(new CollectorBack());
+    //     SmartDashboard.putData(new CollectorOut());
+    //     SmartDashboard.putData(new CollectorBack());
 
-    
+    //     SmartDashboard.putData("jointToBall", new JointSetBallCollecting());
+    //     SmartDashboard.putData("armToZero", new ArmReturn());
+    //     SmartDashboard.putData("jointToZero", new JointReturn());
+    //     SmartDashboard.putData("flatJoint",new JointSetLowestBallCollectingState());
         
+    //     SmartDashboard.putData(new ArmSetVertial());
     }
 
     public Joystick retJoystickGmaePad(){

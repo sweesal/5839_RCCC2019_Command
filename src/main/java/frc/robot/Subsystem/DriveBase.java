@@ -8,24 +8,25 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.Commands.DriveBase.RobotDrive;
-import frc.robot.Library.lpms.LPMS;
 
 
 public class DriveBase extends Subsystem {
 
+  public static final int kTimeoutMs = 20;
 
-  
+  public static final int driveBase_kSlotID = 0;
+  public static final double driveBase_kP = 4e-5;
+  public static final double driveBase_kI = 4e-7;
+  public static final double driveBase_kD = 0;
+  public static final double driveBase_kIzone = 0; 
+  public static final double kMaxOutput = 1;
+  public static final double kMinOutput = -1;
+  public static final double maxRPM = 4750;
+
 
   public CANSparkMax left_1 = RobotMap.leftFrontMotor;
   public CANSparkMax left_2 = RobotMap.leftMiddleMotor;
@@ -39,42 +40,21 @@ public class DriveBase extends Subsystem {
 
   public CANPIDController left_1_PID = left_1.getPIDController();
   public CANPIDController right_1_PID = right_1.getPIDController();
-  
+
+  public CANPIDController left_2_PID = left_2.getPIDController();
+  public CANPIDController left_3_PID = left_3.getPIDController();
+  public CANPIDController right_2_PID= right_2.getPIDController();
+  public CANPIDController right_3_PID = right_3.getPIDController();
+
+
   public SpeedControllerGroup speedControllerGroupLeft = new SpeedControllerGroup(left_1, left_2, left_3);
   public SpeedControllerGroup speedControllerGroupRight = new SpeedControllerGroup(right_1, right_2, right_3);
 
   public DifferentialDrive differentialDrive = new DifferentialDrive(speedControllerGroupLeft, speedControllerGroupRight);
 
-  PIDController leftPIDController = new PIDController(0.1, 0, 0);
-  PIDController rightPIDController = new PIDController(0.1, 0, 0);
-  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);//ks, kv, ka
-
-  private LPMS imu = RobotMap.imu;
-  DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(inchesToMeters(Constants.ROBOT_WIDTH));
-  DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getYaw());
-
-  Pose2d pose  = new Pose2d();
-
-  
-
   public DriveBase(){
     ConfigDriveBaseStartUpSettings();
-
-  //differentialDrive.setSafetyEnabled(false);
-  }
-
-  public void ConfigDriveBaseStartUpSettings(){
-
-    ConfigFactoryDefault();
-    ConfigMasterPID();
-
-    left_2.follow(left_1);
-    left_3.follow(left_1);
-    right_2.follow(right_1);
-    right_3.follow(right_1);
-
-    
-
+    differentialDrive.setSafetyEnabled(false);
   }
 
   @Override
@@ -85,14 +65,15 @@ public class DriveBase extends Subsystem {
   
   @Override
   public void periodic() {
-    EncoderToMs(left_1_Encoder.getVelocity(), 6, 10);
-    EncoderToMs(right_1_Encoder.getVelocity(), 6, 10);
+    SmartDashboard.putNumber("left", left_1_Encoder.getVelocity());
 
   }
 
   public void tankDrive_PercentOutput_Original(double inputLeft, double inputRight){
 
-    differentialDrive.tankDrive(inputLeft, inputRight);
+    double leftPower = ConfigJoystickInput(inputLeft);
+    double rightPower = ConfigJoystickInput(inputRight);
+    differentialDrive.tankDrive(leftPower,rightPower);
 
   }
 
@@ -110,22 +91,58 @@ public class DriveBase extends Subsystem {
     // double inputLeft = Robot.oi.Extreme3D_2.getRawAxis(1);
     // double inputRight = -Robot.oi.Extreme3D_1.getRawAxis(1);
 
-    double setPointLeft = ConfigJoystickInput(leftInput);
-    double setPointRight = ConfigJoystickInput(rightInput);
+    double setPointLeft = ConfigJoystickInput_Velocity(leftInput);
+    double setPointRight = ConfigJoystickInput_Velocity(rightInput);
 
     left_1_PID.setReference(setPointLeft, ControlType.kVelocity);
     right_1_PID.setReference(-setPointRight, ControlType.kVelocity);
+    left_2_PID.setReference(setPointLeft, ControlType.kVelocity);
+    right_2_PID.setReference(-setPointRight, ControlType.kVelocity);
+
+    left_3_PID.setReference(setPointLeft, ControlType.kVelocity);
+    right_3_PID.setReference(-setPointRight, ControlType.kVelocity);
 
 
-}
+  }
+
+  public void Velocity_Move(int input){
+    left_1_PID.setReference(input, ControlType.kVelocity);
+    right_1_PID.setReference(-input, ControlType.kVelocity);
+    left_2_PID.setReference(input, ControlType.kVelocity);
+    right_2_PID.setReference(-input, ControlType.kVelocity);
+
+    left_3_PID.setReference(input, ControlType.kVelocity);
+    right_3_PID.setReference(-input, ControlType.kVelocity);
+
+  }
 
   public void Stop_PercentOutput(){
     speedControllerGroupLeft.set(0);
     speedControllerGroupRight.set(0);
   }
 
-  public Rotation2d getYaw(){
-    return Rotation2d.fromDegrees(10);
+  public void Stop_Voltage(){
+    left_1_PID.setReference(0, ControlType.kVoltage);
+    right_1_PID.setReference(0, ControlType.kVoltage);
+
+    left_2_PID.setReference(0, ControlType.kVoltage);
+    right_2_PID.setReference(0, ControlType.kVoltage);
+
+    left_3_PID.setReference(0, ControlType.kVoltage);
+    right_3_PID.setReference(0, ControlType.kVoltage);
+  }
+
+  public void ConfigDriveBaseStartUpSettings(){
+
+    ConfigFactoryDefault();
+    ConfigMasterPID();
+
+    // left_2.follow(left_1);
+    // left_3.follow(left_1);
+    // right_2.follow(right_1);
+    // right_3.follow(right_1);
+
+
   }
 
 
@@ -140,45 +157,49 @@ public class DriveBase extends Subsystem {
   }
 
   public void ConfigMasterPID(){
-    left_1_PID.setP(Constants.driveBase_kP, Constants.driveBase_kSlotID);
-    left_1_PID.setI(Constants.driveBase_kI, Constants.driveBase_kSlotID);
-    left_1_PID.setD(Constants.driveBase_kD, Constants.driveBase_kSlotID);
+    left_1_PID.setP(driveBase_kP, driveBase_kSlotID);
+    left_1_PID.setI(driveBase_kI, driveBase_kSlotID);
+    left_1_PID.setD(driveBase_kD, driveBase_kSlotID);
 
-    right_1_PID.setP(Constants.driveBase_kP, Constants.driveBase_kSlotID);
-    right_1_PID.setI(Constants.driveBase_kI, Constants.driveBase_kSlotID);
-    right_1_PID.setD(Constants.driveBase_kD, Constants.driveBase_kSlotID);
-  }
+    right_1_PID.setP(driveBase_kP, driveBase_kSlotID);
+    right_1_PID.setI(driveBase_kI, driveBase_kSlotID);
+    right_1_PID.setD(driveBase_kD, driveBase_kSlotID);
 
-  public PIDController getLeftPIDController() {
-    return leftPIDController;
-  }
+    left_2_PID.setP(driveBase_kP, driveBase_kSlotID);
+    left_2_PID.setI(driveBase_kI, driveBase_kSlotID);
+    left_2_PID.setD(driveBase_kD, driveBase_kSlotID);
 
-  public PIDController getRightPIDController() {
-    return rightPIDController;
-  }
+    right_2_PID.setP(driveBase_kP, driveBase_kSlotID);
+    right_2_PID.setI(driveBase_kI, driveBase_kSlotID);
+    right_2_PID.setD(driveBase_kD, driveBase_kSlotID);
 
-  public Pose2d getPose() {
-    return pose;
-  }
+    left_3_PID.setP(driveBase_kP, driveBase_kSlotID);
+    left_3_PID.setI(driveBase_kI, driveBase_kSlotID);
+    left_3_PID.setD(driveBase_kD, driveBase_kSlotID);
 
-  public DifferentialDriveKinematics getKinematics() {
-    return kinematics;
-  }
-
-  public SimpleMotorFeedforward getFeedforward() {
-    return feedforward;
-  }
-
-  public void reset() {
-    odometry.resetPosition(new Pose2d(), getYaw());
+    right_3_PID.setP(driveBase_kP, driveBase_kSlotID);
+    right_3_PID.setI(driveBase_kI, driveBase_kSlotID);
+    right_3_PID.setD(driveBase_kD, driveBase_kSlotID);
   }
 
   public double ConfigJoystickInput(double input){
 
     if(Math.abs(input) > 0.1){
-      return input*input*input*Constants.maxRPM;
+      return input;
     }else if(Math.abs(input) > 1.001){
-      return Constants.maxRPM;
+      return 1;
+    }else{
+      return 0;
+    }
+
+  }
+
+  public double ConfigJoystickInput_Velocity(double input){
+
+    if(Math.abs(input) > 0.1){
+      return input*maxRPM;
+    }else if(Math.abs(input) > 1.001){
+      return maxRPM;
     }else{
       return 0;
     }
@@ -210,6 +231,7 @@ public class DriveBase extends Subsystem {
       prevLeftVelocity = 0;
       prevRightVelocity = 0;
       maxLeftVelocity = 0;
+      
       maxRightVelocity = 0;
       prevLeftAccel = 0;
       prevRightAccel = 0;
@@ -238,36 +260,36 @@ public class DriveBase extends Subsystem {
 
    // double distance = 0;
         
-    double leftMpS = EncoderToMs(left_1_Encoder.getVelocity(), 6, 10);
-    double rightMpS = EncoderToMs(right_1_Encoder.getVelocity(), 6, 10);
+    double leftMpS = EncoderToMs(left_1_Encoder.getVelocity(), 6);
+    double rightMpS = EncoderToMs(right_1_Encoder.getVelocity(), 6);
       
 
-   double leftAccel = 0;
-   double rightAccel = 0;
+  double leftAccel = 0;
+  double rightAccel = 0;
 
-    double rightJerk = 0;
-    double leftJerk = 0;
+  double rightJerk = 0;
+  double leftJerk = 0;
       
 
 
-    if(maxVelAccelTimer.get()>.02)
-    {
+  if(maxVelAccelTimer.get()>.02)
+  {
 
-      leftDistance = leftDistance + leftMpS;
-      rightDistance =  rightDistance + rightMpS;
+    leftDistance = leftDistance + leftMpS;
+    rightDistance =  rightDistance + rightMpS;
       
-      prevLeftVelocity = leftMpS;
-      prevRightVelocity = rightMpS;
+    prevLeftVelocity = leftMpS;
+    prevRightVelocity = rightMpS;
   
 
-      leftAccel = (leftMpS - prevLeftVelocity) / .02;
-      rightAccel = (rightMpS - prevRightVelocity) / .02;
+    leftAccel = (leftMpS - prevLeftVelocity) / .02;
+    rightAccel = (rightMpS - prevRightVelocity) / .02;
 
-      leftJerk = (leftAccel - prevLeftAccel) / .02;
-      rightJerk = (rightAccel - prevRightAccel) / .02;
+    leftJerk = (leftAccel - prevLeftAccel) / .02;
+    rightJerk = (rightAccel - prevRightAccel) / .02;
 
-      leftDistance = leftDistance + leftMpS;
-      rightDistance =  rightDistance + rightMpS;
+    leftDistance = leftDistance + leftMpS;
+    rightDistance =  rightDistance + rightMpS;
 
 
 
@@ -310,16 +332,12 @@ public class DriveBase extends Subsystem {
         prevRightAccel = rightAccel;
 
 
-     }
-
-  public double EncoderToMs(double encoderVal, double wheelRadius, double gearRatio){
-
-    return Math.abs(encoderVal) / .1  / 6000 * .0254 * wheelRadius * Math.PI * 2 * gearRatio;
-    
   }
 
-  public double inchesToMeters(double inches){
-    return inches*2.54/100; 
+  public double EncoderToMs(double encoderVal, double wheelRadius){
+
+    return Math.abs(encoderVal) / .1  / 6000 * .0254 * wheelRadius * Math.PI * 2;
+    
   }
 
 
